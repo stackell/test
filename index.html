@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STACKELL | Premium Essentials</title>
+    <style>
+        :root {
+            --primary-color: #000000; 
+            --secondary-color: #e3a209; /* Gold */
+            --bg-color: #f8f9fa;
+            --text-dark: #1a1a1a;
+            --text-light: #ffffff;
+            --card-bg: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', 'Segoe UI', sans-serif; }
+
+        body { background-color: var(--bg-color); color: var(--text-dark); display: flex; flex-direction: column; min-height: 100vh; scroll-behavior: smooth; }
+
+        /* Navigation */
+        header {
+            background-color: var(--primary-color);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .logo { font-size: 1.8rem; font-weight: 900; letter-spacing: 2px; cursor: pointer; color: var(--secondary-color); }
+        nav ul { list-style: none; display: flex; gap: 1.5rem; align-items: center; }
+        nav ul li a { color: var(--text-light); text-decoration: none; font-weight: 500; cursor: pointer; transition: 0.3s; font-size: 0.9rem; }
+        nav ul li a:hover { color: var(--secondary-color); }
+
+        .page-section { display: none; padding: 4rem 5%; flex: 1; }
+        .active-section { display: block; animation: fadeIn 0.4s ease-in; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Hero Section */
+        .hero {
+            height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('images/00.png');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            border-radius: 15px;
+            margin-bottom: 3rem;
+        }
+
+        .sale-banner {
+            background: var(--secondary-color);
+            color: black;
+            padding: 10px 20px;
+            font-weight: bold;
+            border-radius: 5px;
+            margin-bottom: 1.5rem;
+            animation: pulse 2s infinite;
+            text-align: center;
+            display: inline-block;
+        }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
+
+        .home-features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+        .f-card { background: white; padding: 2rem; border-radius: 12px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .f-card h3 { color: var(--secondary-color); margin-bottom: 0.5rem; }
+
+        /* Shop Grid */
+        .search-container { margin-bottom: 2rem; text-align: center; }
+        .search-input { width: 100%; max-width: 500px; padding: 12px 20px; border: 1px solid #ddd; border-radius: 50px; outline: none; }
+
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 2rem; }
+        .product-card { background: white; padding: 1rem; border-radius: 12px; transition: 0.3s; cursor: pointer; border: 1px solid #eee; display: flex; flex-direction: column; }
+        .product-card:hover { transform: translateY(-5px); border-color: var(--secondary-color); }
+        .product-card img { width: 100%; height: 200px; object-fit: cover; border-radius: 8px; }
+        
+        /* Product Detail & Gallery */
+        .detail-container { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; background: white; padding: 3rem; border-radius: 20px; margin-bottom: 2rem; }
+        .gallery-container { display: flex; flex-direction: column; gap: 1rem; }
+        .main-img-display { width: 100%; height: 450px; object-fit: cover; border-radius: 15px; border: 1px solid #eee; }
+        .thumb-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+        .thumb-img { width: 100%; height: 70px; object-fit: cover; border-radius: 8px; cursor: pointer; border: 2px solid transparent; transition: 0.2s; }
+        .thumb-img:hover { border-color: var(--secondary-color); }
+        .thumb-img.active { border-color: var(--secondary-color); opacity: 0.6; }
+
+        .ratings { color: #ffffff; margin: 10px 0; font-size: 1.1rem; }
+
+        /* Strikethrough Price Styling */
+        .old-price { text-decoration: line-through; color: #888; font-size: 1rem; margin-right: 10px; font-weight: normal; }
+
+        /* Review Section Styling */
+        .review-section { background: white; padding: 2rem; border-radius: 20px; margin-top: 2rem; }
+        .review-card { border-bottom: 1px solid #eee; padding: 1.5rem 0; }
+        .review-header { display: flex; justify-content: space-between; margin-bottom: 5px; }
+        .review-user { font-weight: bold; }
+        .review-text { color: #555; font-style: italic; }
+
+        /* Similar Products Styling */
+        .similar-section { margin-top: 4rem; }
+        .similar-section h2 { margin-bottom: 1.5rem; text-align: left; }
+
+        /* Cart */
+        .cart-item { display: flex; justify-content: space-between; align-items: center; background: white; padding: 1rem; border-radius: 10px; margin-bottom: 1rem; border: 1px solid #eee; }
+
+        /* Forms */
+        .contact-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; background: white; padding: 2rem; border-radius: 15px; }
+        .contact-form input, .contact-form textarea { width: 100%; padding: 12px; margin-bottom: 1rem; border: 1px solid #ddd; border-radius: 5px; }
+
+        .btn { background: var(--secondary-color); color: black; padding: 12px 24px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; }
+        .btn:hover { background: #000; color: white; }
+
+        footer { background: var(--primary-color); color: white; text-align: center; padding: 3rem; margin-top: auto; }
+
+        @media (max-width: 768px) { 
+            .detail-container, .contact-wrapper { grid-template-columns: 1fr; } 
+            .main-img-display { height: 300px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo" onclick="showPage('home')">STACKELL</div>
+        <nav>
+            <ul>
+                <li><a onclick="showPage('home')">Home</a></li>
+                <li><a onclick="showPage('shop')">Shop</a></li>
+                <li><a onclick="showPage('contact')">Contact</a></li>
+                <li><a id="cart-nav" onclick="showPage('cart')" style="color: var(--secondary-color);">🛒 Cart (0)</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main id="home" class="page-section active-section">
+        <div class="hero">
+            <h1>The Future of Shopping</h1>
+            <p>Elegance in every stack. Quality in every item.</p>
+            <button class="btn" style="margin-top: 1.5rem" onclick="showPage('shop')">Explore Shop</button>
+        </div>
+        
+        <h2 style="text-align:center; margin-bottom: 1.5rem;">Why Choose STACKELL?</h2>
+        <div class="home-features-grid">
+            <div class="f-card"><h3>Free Delivery</h3><p>On orders over ₹100</p></div>
+            <div class="f-card"><h3>Secure Payment</h3><p>Verified SSL encryption</p></div>
+            <div class="f-card"><h3>24/7 Support</h3><p>Ready to help anytime</p></div>
+            <div class="f-card"><h3>Easy Returns</h3><p>15-day money back guarantee</p></div>
+        </div>
+    </main>
+
+    <main id="shop" class="page-section">
+        <div style="text-align: center; width: 100%;">
+            <div class="sale-banner">FLASH SALE : 20% OFF ALL ITEMS</div>
+        </div>
+
+        <div class="search-container">
+            <input type="text" id="shopSearch" class="search-input" placeholder="Search products..." onkeyup="filterShop()">
+        </div>
+        <div class="product-grid" id="main-shop-grid"></div>
+    </main>
+
+    <main id="product" class="page-section">
+        <button onclick="showPage('shop')" style="background:none; border:none; color:var(--secondary-color); cursor:pointer; font-weight:bold; margin-bottom:1rem;">← BACK TO SHOP</button>
+        
+        <div class="detail-container">
+            <div class="gallery-container">
+                <img id="detail-img-main" class="main-img-display" src="">
+                <div class="thumb-row" id="thumb-row"></div>
+            </div>
+            <div class="detail-info">
+                <h1 id="detail-title"></h1>
+                <div class="ratings">★★★★★ <span style="font-size: 0.8rem; color: #666;">(4.9/5 Average)</span></div>
+                <h2 style="margin: 10px 0;">
+                    <span id="detail-price-old" class="old-price"></span>
+                    <span id="detail-price" style="color: var(--secondary-color);"></span>
+                </h2>
+                <p id="detail-desc" style="color: #555; margin-bottom: 2rem; line-height: 1.6;"></p>
+                <button class="btn" style="width:100%" id="add-btn-action">Add To Cart</button>
+            </div>
+        </div>
+
+        <div class="review-section">
+            <h2 style="margin-bottom: 1.5rem; border-bottom: 2px solid var(--secondary-color); display: inline-block;">Customer Reviews</h2>
+            <div id="reviews-list"></div>
+        </div>
+
+        <div class="similar-section">
+            <h2 style="border-bottom: 2px solid var(--secondary-color); display: inline-block;">Similar Products</h2>
+            <div class="product-grid" id="similar-products-grid" style="margin-top:1.5rem;"></div>
+        </div>
+    </main>
+
+    <main id="cart" class="page-section">
+        <h2>Your Shopping Cart</h2>
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; margin-top: 2rem;">
+            <div id="cart-container"></div>
+            <div style="background:white; padding:1.5rem; border-radius:15px; height: fit-content; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                <h2 id="total-price">Total: ₹0.00</h2>
+                <hr style="margin-bottom: 1rem; border: 0; border-top: 1px solid #eee;">
+                <h3>Delivery Details</h3>
+                <input type="text" id="custName" placeholder="Full Name" style="width:100%; padding:10px; margin-top:10px; border: 1px solid #ddd;">
+                <input type="text" id="custAddress" placeholder="Full Address" style="width:100%; padding:10px; margin-top:10px; border: 1px solid #ddd;">
+                <input type="text" id="custNumber" placeholder="Phone Number" style="width:100%; padding:10px; margin-top:10px; border: 1px solid #ddd;">
+                <button class="btn" style="width:100%; margin-top:1.5rem;" onclick="checkout()">Place WhatsApp Order</button>
+            </div>
+        </div>
+    </main>
+
+    <main id="contact" class="page-section">
+        <h1 style="text-align: center; margin-bottom: 2rem;">Get In Touch</h1>
+        <div class="contact-wrapper">
+            <div class="contact-info">
+                <h>Contact Details</h2>
+                <p style="margin: 15px 0;"> <strong>Phone:</strong> +91 70125 43817</p>
+                <p style="margin: 15px 0;"> <strong>Email:</strong> stackellstore@gmail.com</p>
+            </div>
+            <div class="contact-form">
+                <input type="text" id="contactName" placeholder="Your Name">
+                <input type="email" id="contactEmail" placeholder="Your Email">
+                <textarea id="contactMessage" rows="5" placeholder="Your Message"></textarea>
+                <button class="btn" onclick="sendContactWhatsApp()">Send Message via WhatsApp</button>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <h2 style="color: var(--secondary-color);">STACKELL</h2>
+        <p style="margin: 10px 0;">Premium Goods. All India Shipping .</p>
+        <p>&copy; 2026 STACKELL STORE. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const products = [
+            {
+                id: 1,
+                name: "Premium Metal Magnetic 360° Mobile Holder – Strong, Sleek & Fully Adjustable,Foldable, compact, and space-saving design",
+                price: 350,
+                desc: "A sleek magnetic car phone holder designed for both dashboard and windshield mounting, offering flexible placement options.Its strong grip and adjustable angle ensure your phone stays secure and perfectly visible while driving.With a modern design and hands-free convenience, it enhances safety and ease on every journey.",
+                images: [
+                    "images/1-1.png",
+                    "images/1-2.png",
+                    "images/1-3.png",
+                    "images/1-4.png",
+                ],
+                reviews: [
+                    { user: "Venkatesh Byri", rating: 5, text: "Good product with friendly budget" },
+                    { user: "Lalita", rating: 4, text: "Strong grip, sleek design, and super convenient for safe hands-free driving." }
+                ]
+            },
+            {
+                id: 2,
+                name: "Rechargeable LED Study Table Lamp with Rechargable battery, 3 Color Modes, Flexible Gooseneck, USB-C Charging, Eye Protection Desk Lamp with Pen Holder",
+                price: 399,
+                desc: "A modern LED desk lamp with adjustable brightness and three lighting modes for study, reading, and relaxation.Its flexible 360° gooseneck allows precise positioning, while the eye-care light reduces strain during long use.Designed with a stable base and built-in organizer, it keeps your workspace neat and efficient.",
+                images: [
+                    "file:///D:/DROPSHIPPING/products/Gemini_Generated_Image_y4lk94y4lk94y4lk.png",
+                    "file:///D:/DROPSHIPPING/products/Firefly%20(3).png",
+                    "file:///D:/DROPSHIPPING/products/Firefly%20(4).png",
+                    "file:///D:/DROPSHIPPING/products/Firefly%20(5).png",
+                ],    
+                         
+                reviews: [
+                    { user: "Mukesh Majhi", rating: 5, text: "Best for studying , intensity can be controlled , also 3 different lights for different purposes." },
+                    { user: "Mamata Bishi", rating: 4, text: "Very nice product it inhanced my table look, but place given for pen pencils is a bit small in length" }
+                ]
+            },
+            {
+                id: 3,
+                name: "Portable Neck Fan – 1200mAh USB Rechargeable Hands-Free Wearable Fan with 3 Speed Modes",
+                price: 380,
+                desc: "Stay cool anywhere with this stylish dual-head neck fan, designed for hands-free comfort and convenience.Its flexible band and adjustable twin fans provide targeted airflow for maximum cooling efficiency.Lightweight, portable, and USB rechargeable—perfect for travel, outdoor use, or daily wear.",
+                images: [
+                    "file:///D:/DROPSHIPPING/products/Airbrush-OBJECT-REMOVER-1775982771499.jpg",
+                    "file:///D:/DROPSHIPPING/products/Gemini_Generated_Image_gyhu8gyhu8gyhu8g.png",
+                    "file:///D:/DROPSHIPPING/products/Airbrush-OBJECT-REMOVER-1775983283043.jpg",
+                    "file:///D:/DROPSHIPPING/products/wmremove-transformed.png",
+                ],
+                reviews: [
+                    { user: "Shazia Khan", rating: 4, text: "The best Fan I've ever seen for the value. This is not a paid reveiw btw I'm a normal consumer .this fan is very good for its price I got it for 380 rs and it's worth every rs. The speed is very outstanding the battery life is very good as it truly has a 1200 mah cell if you want a good fan for 300 to 400 rs just get this one " },
+                    { user: "Arpita Chorghade", rating: 5, text: "This is a very useful and lightweight neck fan. It provides good airflow and is easy to carry anywhere. A great product for everyday use." }
+                ]
+            },
+            {
+                id: 4,
+                name: "Dog Grooming Foot/Paw Washing Cup, Pet Paw Cleaner, Portable Dog Feet Washer With Soft Silicone Bristles (Medium Size)",
+                price: 299.00,
+                desc: "Keep your pet’s paws clean and dirt-free with this easy-to-use paw cleaning cup.Soft inner bristles gently remove mud and debris while keeping your dog comfortable.Portable, mess-free, and perfect for home or travel after walks or outdoor play.",
+                images: [
+                    "file:///D:/DROPSHIPPING/products/Gemini_Generated_Image_ozgc83ozgc83ozgc.png",
+                    "file:///D:/DROPSHIPPING/products/Gemini_Generated_Image_4zeewp4zeewp4zee.png",
+                    "file:///D:/DROPSHIPPING/products/Gemini_Generated_Image_8z8gpk8z8gpk8z8g.png",
+                    "file:///D:/DROPSHIPPING/products/Gemini_Generated_Image_ckuc1gckuc1gckuc.png",
+                ],
+               reviews: [
+                    { user: "jansi bhuppal", rating: 5, text: "Best product for pet parents and good quality..." },
+                    { user: "Keeyan Singh", rating: 5, text: "A simple and effective solution that keeps your dog’s paws clean in seconds without any mess." }
+                ]
+            },
+            {
+                id: 5,
+                name: "Mini Thermal Printer Inkless Rechargeable - Bluetooth Printer,Mini Printer With black and white",
+                price: 899,
+                desc: "Compact and efficient, this mini thermal printer lets you print notes, labels, photos, and lists instantly without using ink—just thermal paper for low-cost, mess-free printing.With Bluetooth connectivity, it easily pairs with your smartphone, making it perfect for students, journaling, and on-the-go use.",
+                images: [
+                    "file:///D:/DROPSHIPPING/products/Gemini_Generated_Image_dsizacdsizacdsiz.png",
+                    "file:///D:/DROPSHIPPING/products/Gemini_Generated_Image_r69sjmr69sjmr69s.png",
+                    "file:///D:/DROPSHIPPING/products/Gemini_Generated_Image_kjj2o7kjj2o7kjj2.png",
+                    "file:///D:/DROPSHIPPING/products/Gemini_Generated_Image_nekgwenekgwenekg.png",
+                ],
+               reviews: [
+                    { user: "Sangeeta Sharma", rating: 5, text: "It's really useful and of good quality... Stickers were attached by me but overall the print and efficiency is really good.... Definitely recommend" },
+                    { user: "Nargis Shaikh", rating: 5, text: "Yaar students ke liye buhat good product hai mein toh sab ko bolo gi ki students ko lena chiye aur jo koi ye soch rha hai ki picture lena chati ho toh kharab aaye ga 😄 pr age biology diagram nikalo ge toh accha" }
+                ]
+            },
+            {
+                id: 6,
+                name: "Mini Foldable Desktop Mop for Kitchen – Self‑Squeeze Sponge Mop for Wet & Dry Use / Portable Cleaning Tool for Small Spaces",
+                price: 199,
+                desc: "Compact and foldable mini mop designed for quick cleaning in tight spaces like kitchens, bathrooms, and glass surfaces.Features a self-squeeze sponge head for easy water removal, making wet and dry cleaning effortless and mess-free.Lightweight and portable design ensures convenient use and storage, perfect for everyday quick cleanups.",
+                images: [
+                    "file:///D:/DROPSHIPPING/products/13_04_2026%2013_47_07.png",
+                    "file:///D:/DROPSHIPPING/products/Gemini_Generated_Image_hwag5khwag5khwag.png",
+                    "file:///D:/DROPSHIPPING/products/Gemini_Generated_Image_75x3ad75x3ad75x3%20(1).jpeg",
+                    "file:///D:/DROPSHIPPING/products/Gemini_Generated_Image_dgw69ddgw69ddgw6.png",
+                ],
+               reviews: [
+                    { user: "Divya Babu", rating: 5, text: "Eay to use nice product for cleaning table kitchen top etc without dirty hands" },
+                    { user: "Kunika", rating: 4, text: "sponge is not that great . but a tool like this is convenient for making slab clean easily ." }
+                ]
+            },
+            {
+                id: 7,
+                name: "Electrostatic Pet Hair Removal Glove - Removes Dog/Cat Fur From Couch,Carpet,Car Seat,Furniture",
+                price: 200,
+                desc: "Electrostatic grooming glove easily lifts and traps pet hair from couches, carpets, car seats, and furniture.Soft and gentle design provides a comfortable grooming experience for both dogs and cats while reducing shedding.Reusable and easy to clean, making it a convenient and eco-friendly solution for everyday pet hair removal.",
+                images: [
+                    "file:///D:/DROPSHIPPING/products/793bdc9a-9b6f-48e5-9fbd-66c890877197.jpeg",
+                    "file:///D:/DROPSHIPPING/products/818c63ca-b0d8-4e58-98a9-62a8b3a2e913%20(1).jpeg",
+                    "file:///D:/DROPSHIPPING/products/a83c94de-a6c8-422c-97dc-191ea0be30ed.jpeg",
+                    "file:///D:/DROPSHIPPING/products/Gemini_Generated_Image_j61rfj61rfj61rfj.png",
+                ],
+               reviews: [
+                    { user: "Gazala Shaikh", rating: 4, text: "material bhi achcha Hai chij bhi acchi hai aap log befikra hokar Le sakte ho" },
+                    { user: "Nazia Bano", rating: 5, text: "It really works. Good product 👍. Best works on wide areas like bedsheet, pillow cover" }
+                ]
+            },
+            {
+                id: 8,
+                name: "Fast 2-in-1 Mini Bag Sealer with Cutter – USB Rechargeable, Portable Heat Sealing Machine for Multiple Plastic Bags",
+                price: 299,
+                desc: "2-in-1 mini bag sealer with built-in cutter quickly seals and opens plastic bags to keep food fresh longer.USB rechargeable and portable design makes it perfect for use in the kitchen, travel, or everyday storage needs.Easy to use and compatible with multiple plastic bags, offering a convenient and reusable alternative to clips and ties.",
+                images: [
+                    "file:///D:/DROPSHIPPING/products/5cbf5533-26dd-4d94-9664-0f6b2fabd924.jpeg",
+                    "file:///D:/DROPSHIPPING/products/Gemini_Generated_Image_b0lqkbb0lqkbb0lq.png",
+                    "file:///D:/DROPSHIPPING/products/5cbf5533-26dd-4d94-9664-0f6b2fabd924%20(1).jpeg",
+                    "file:///D:/DROPSHIPPING/products/5cbf5533-26dd-4d94-9664-0f6b2fabd924%20(2).jpeg",
+                ],
+               reviews: [
+                    { user: "Nariender Kaur", rating: 5, text: "Bahut vadiya product hai 🙂☺️ thanks you STACKELL ❤️❤️" },
+                    { user: "premjita leishangthem", rating: 4, text: "Good👍" }
+                ]
+            }
+        ];
+
+        let cart = [];
+
+        function showPage(id) {
+            document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active-section'));
+            document.getElementById(id).classList.add('active-section');
+            window.scrollTo(0,0);
+        }
+
+        function renderProducts(list) {
+            const grid = document.getElementById('main-shop-grid');
+            grid.innerHTML = list.map(p => `
+                <div class="product-card" onclick="viewProduct(${p.id})">
+                    <img src="${p.images[0]}" loading="lazy">
+                    <div style="padding:10px;">
+                        <h3 style="font-size:1rem; margin-bottom:5px;">${p.name}</h3>
+                        <p>
+                            <span style="text-decoration:line-through; color:#999; font-size:0.85rem;">₹${(p.price * 1.25).toFixed(2)}</span>
+                            <span style="color:var(--secondary-color); font-weight:bold; margin-left:5px;">₹${parseFloat(p.price).toFixed(2)}</span>
+                        </p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterShop() {
+            const q = document.getElementById('shopSearch').value.toLowerCase();
+            const filtered = products.filter(p => p.name.toLowerCase().includes(q));
+            renderProducts(filtered);
+        }
+
+        function viewProduct(id) {
+            const p = products.find(item => item.id === id);
+            document.getElementById('detail-title').innerText = p.name;
+            
+            // Set prices
+            document.getElementById('detail-price-old').innerText = `₹${(p.price * 1.25).toFixed(2)}`;
+            document.getElementById('detail-price').innerText = `₹${parseFloat(p.price).toFixed(2)}`;
+            
+            document.getElementById('detail-desc').innerText = p.desc;
+            document.getElementById('add-btn-action').onclick = () => addToCart(p);
+            document.getElementById('detail-img-main').src = p.images[0];
+
+            // Thumbs
+            const thumbRow = document.getElementById('thumb-row');
+            thumbRow.innerHTML = p.images.map((img, idx) => `
+                <img src="${img}" class="thumb-img ${idx === 0 ? 'active' : ''}" onclick="updateMainImg(this, '${img}')">
+            `).join('');
+
+            // Reviews
+            const reviewList = document.getElementById('reviews-list');
+            reviewList.innerHTML = (p.reviews && p.reviews.length > 0) ? 
+                p.reviews.map(rev => `
+                    <div class="review-card">
+                        <div class="review-header">
+                            <span class="review-user">${rev.user}</span>
+                            <span style="color:#f39c12">${'★'.repeat(rev.rating)}</span>
+                        </div>
+                        <p class="review-text">"${rev.text}"</p>
+                    </div>
+                `).join('') : `<p style="color:#888;">No reviews yet.</p>`;
+
+            // RENDER SIMILAR PRODUCTS
+            renderSimilarProducts(id);
+
+            showPage('product');
+        }
+
+        function renderSimilarProducts(currentId) {
+            const grid = document.getElementById('similar-products-grid');
+            // Filter out current product and take 4 others
+            const similar = products.filter(p => p.id !== currentId).slice(0, 4);
+            
+            grid.innerHTML = similar.map(p => `
+                <div class="product-card" onclick="viewProduct(${p.id})">
+                    <img src="${p.images[0]}" loading="lazy">
+                    <div style="padding:10px;">
+                        <h3 style="font-size:0.9rem; margin-bottom:5px;">${p.name}</h3>
+                        <p style="color:var(--secondary-color); font-weight:bold; font-size:0.9rem;">₹${parseFloat(p.price).toFixed(2)}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateMainImg(el, imgSrc) {
+            document.getElementById('detail-img-main').src = imgSrc;
+            document.querySelectorAll('.thumb-img').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+        }
+
+        function addToCart(p) {
+            cart.push(p);
+            updateCartUI();
+            alert('Item added to cart!');
+        }
+
+        function updateCartUI() {
+            document.getElementById('cart-nav').innerText = `🛒 Cart (${cart.length})`;
+            const container = document.getElementById('cart-container');
+            if(cart.length === 0) {
+                container.innerHTML = "<p>Your cart is empty.</p>";
+                document.getElementById('total-price').innerText = "Total: ₹0.00";
+                return;
+            }
+            let total = 0;
+            container.innerHTML = cart.map((item, index) => {
+                total += parseFloat(item.price);
+                return `
+                    <div class="cart-item">
+                        <span>${item.name}</span>
+                        <div>
+                            <span>₹${parseFloat(item.price).toFixed(2)}</span>
+                            <button onclick="removeFromCart(${index})" style="color:red; background:none; border:none; margin-left:10px;">✕</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            document.getElementById('total-price').innerText = `Total: ₹${total.toFixed(2)}`;
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+        }
+
+        function checkout() {
+            const name = document.getElementById('custName').value;
+            const address = document.getElementById('custAddress').value;
+            const number = document.getElementById('custNumber').value;
+            if(!name || !address || !number || cart.length === 0) {
+                alert("Fill all details and add items to cart.");
+                return;
+            }
+            const itemsList = cart.map(i => `- ${i.name}`).join('%0A');
+            const total = cart.reduce((sum, i) => sum + parseFloat(i.price), 0).toFixed(2);
+            const message = `*NEW ORDER*%0A*Name:* ${name}%0A*Address:* ${address}%0A*Items:*%0A${itemsList}%0A*Total:* ₹${total}`;
+            window.open(`https://wa.me/917012543817?text=${message}`, '_blank');
+        }
+
+        function sendContactWhatsApp() {
+            const name = document.getElementById('contactName').value;
+            const email = document.getElementById('contactEmail').value;
+            const message = document.getElementById('contactMessage').value;
+            
+            if(!name || !email || !message) {
+                alert("Please fill in all fields before sending.");
+                return;
+            }
+
+            const whatsappMessage = `*NEW CONTACT INQUIRY*%0A*Name:* ${name}%0A*Email:* ${email}%0A*Message:* ${message}`;
+            window.open(`https://wa.me/917012543817?text=${whatsappMessage}`, '_blank');
+        }
+
+        renderProducts(products);
+    </script>
+</body>
+</html>
